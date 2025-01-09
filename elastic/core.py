@@ -1,6 +1,8 @@
 from config import ModelType, VectorStoreType, model_type, vector_store_type, ollama_model_name, request_timeout, llamafile_port
 
-from llama_index.vector_stores.elasticsearch import ElasticsearchStore
+from llama_index.vector_stores.elasticsearch import ElasticsearchStore, AsyncBM25Strategy, AsyncDenseVectorStrategy
+from elasticsearch import AsyncElasticsearch
+
 from llama_index.core.vector_stores.simple import SimpleVectorStore
 
 from llama_index.llms.ollama import Ollama
@@ -34,7 +36,9 @@ match vector_store_type:
             index_name=index_name,
             vector_field='model_vector',
             text_field='model_text',
-            es_url='http://localhost:9200',
+            es_client=AsyncElasticsearch(hosts=['http://localhost:9200'], request_timeout=request_timeout),
+            retrieval_strategy=AsyncBM25Strategy(),
+            # retrieval_strategy=AsyncDenseVectorStrategy(hybrid=True),
         )
     case _:
         raise Exception('unknown vector store type' + vector_store_type.name)
