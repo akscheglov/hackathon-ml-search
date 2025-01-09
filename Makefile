@@ -31,7 +31,7 @@ llamafile-query:
 llamafile-download:
 ifeq (,$(wildcard ${llamafile_path}))
 	@echo 'llamafile not found, downloading...'
-    curl 'https://huggingface.co/Mozilla/llava-v1.5-7b-llamafile/resolve/main/${LLAMAFILE_NAME}?download=true' -o ${llamafile_path}
+	curl 'https://huggingface.co/Mozilla/llava-v1.5-7b-llamafile/resolve/main/${LLAMAFILE_NAME}?download=true' -o ${llamafile_path}
 	chmod +x ${llamafile_path}
 else
 	@echo 'llamafile already exists'
@@ -42,10 +42,10 @@ llamafile-start: llamafile-download
 
 #####
 
-elastic-index: elastic-search-start
+elastic-index: # elastic-search-start
 	cd elastic && ${python} index.py
 
-elastic-query: elastic-search-start
+elastic-query: # elastic-search-start
 	cd elastic && ${python} query.py
 
 # https://ollama.com/download

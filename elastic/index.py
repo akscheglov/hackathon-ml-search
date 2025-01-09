@@ -7,9 +7,34 @@ from llama_index.core.extractors import SummaryExtractor, TitleExtractor, Keywor
 
 transformations = [
     SentenceSplitter(chunk_size=256, chunk_overlap=5),
-    TitleExtractor(nodes=5, llm=llm),
-    SummaryExtractor(summaries=["prev", "self"], llm=llm),
-    KeywordExtractor(keywords=10, llm=llm),
+    TitleExtractor(
+        nodes=5,
+        llm=llm,
+        node_template="""\
+Context: {context_str}. Give a title that summarizes all of \
+the unique entities, titles or themes found in the context. Use russian for resulting title. Title: """,
+        combine_template="""\
+{context_str}. Based on the above candidate titles and content, \
+what is the comprehensive title for this document? Use russian for resulting title. Title: """,
+    ),
+    SummaryExtractor(
+        summaries=["self"],
+        llm=llm,
+        prompt_template="""\
+Here is the content of the section:
+{context_str}
+
+Summarize the key topics and entities of the section. Use russian for resulting summary. \
+
+Summary: """,
+    ),
+    KeywordExtractor(
+        keywords=10,
+        llm=llm,
+        prompt_template="""\
+{context_str}. Give {keywords} unique keywords for this \
+document. Format as comma separated. Use russian for resulting keywords. Keywords: """,
+    ),
     embed_model,
 ]
 
