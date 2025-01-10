@@ -11,29 +11,29 @@ transformations = [
         nodes=5,
         llm=llm,
         node_template="""\
-Context: {context_str}. Give a title that summarizes all of \
-the unique entities, titles or themes found in the context. Use russian for resulting title. Title: """,
+Контекст: {context_str}. Назови заголовок, который суммирует все \
+уникальные объекты, названия или темы, найденные в контексте. Будь краток и используй только русский язык. Заголовок: """,
         combine_template="""\
-{context_str}. Based on the above candidate titles and content, \
-what is the comprehensive title for this document? Use russian for resulting title. Title: """,
+{context_str}. На основании вышеуказанных заголовков и контекста, \
+каково полное название этого документа? Будь краток и используй только русский язык. Заголовок: """,
     ),
     SummaryExtractor(
         summaries=["self"],
         llm=llm,
         prompt_template="""\
-Here is the content of the section:
+Вот содержимое раздела:
 {context_str}
 
-Summarize the key topics and entities of the section. Use russian for resulting summary. \
+Кратко изложи основные темы и сущности раздела. Для итогового резюме используй русский язык. \
 
-Summary: """,
+Краткое содержание: """,
     ),
     KeywordExtractor(
         keywords=10,
         llm=llm,
         prompt_template="""\
-{context_str}. Give {keywords} unique keywords for this \
-document. Format as comma separated. Use russian for resulting keywords. Keywords: """,
+Контекст: {context_str}. Приведи до {keywords} уникальных ключевых слов для приведенного контекста. \
+В ответе используй только русский язык и выведи ключевые слова через запятую. Ключевые слова: """,
     ),
     embed_model,
 ]
@@ -52,3 +52,8 @@ print(".....Starting pipeline.....")
 pipeline.run(show_progress=True, documents=documents)
 
 print(".....Done running pipeline.....")
+
+from config import VectorStoreType, vector_store_type
+
+if vector_store_type == VectorStoreType.INMEMORY or vector_store_type == VectorStoreType.FAISS:
+    vector_store.persist('./store_'+vector_store_type.name.lower())

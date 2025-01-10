@@ -9,6 +9,7 @@ class ModelType(Enum):
 class VectorStoreType(Enum):
     INMEMORY = 1
     ELASTICSEARCH = 2
+    FAISS = 3
 
 load_dotenv('../.settings')
 
