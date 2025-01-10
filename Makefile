@@ -31,7 +31,7 @@ llamafile-query:
 llamafile-download:
 ifeq (,$(wildcard ${llamafile_path}))
 	@echo 'llamafile not found, downloading...'
-    curl 'https://huggingface.co/Mozilla/llava-v1.5-7b-llamafile/resolve/main/${LLAMAFILE_NAME}?download=true' -o ${llamafile_path}
+	url 'https://huggingface.co/Mozilla/llava-v1.5-7b-llamafile/resolve/main/${LLAMAFILE_NAME}?download=true' -o ${llamafile_path}
 	chmod +x ${llamafile_path}
 else
 	@echo 'llamafile already exists'
